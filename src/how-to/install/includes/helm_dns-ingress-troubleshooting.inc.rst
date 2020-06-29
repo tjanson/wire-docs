@@ -96,6 +96,13 @@ Install the nodeport nginx ingress:
    helm upgrade --install nginx-ingress-controller wire/nginx-ingress-controller --wait
    helm upgrade --install nginx-ingress-services wire/nginx-ingress-services -f values.yaml -f secrets.yaml --wait
 
+.. note::
+   
+    If you employ something more intricate than a TCP load-balancer or DNS round-robin in front of your ingress-controller, like
+    another http reverse-proxy, it is important that the reverse-proxy does not strip any headers; as the nginx ingress controller
+    looks at the `Host` header to decide what service to route to for each incoming request.
+    
+    
 Next, we want to redirect port 443 to the port the nginx https ingress nodeport is listening on (31773), and, redirect port 80 to the nginz http port (31772) (for redirects only). To do that, you have two options:
 
 * Option 1: ssh into your kubernetes node, then execute:
