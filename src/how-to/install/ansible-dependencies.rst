@@ -74,16 +74,12 @@ the instructions above.
 Download external Ansible Roles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We use git submodules to manage some external ansible roles.
+We use git submodules to manage external ansible roles.
 
 We recommend setting `git config --global submodule.recurse true` and `git
-config --global fetch.parallel 10` for convenience.
+config --global fetch.parallel 10`, so they're automatically fetched for
+convenience.
 
-If you've already cloned this repo before having enabled this, run `git
-submodule update --init --recursive` once (or if you don't want to enable this,
-manually on every update).
-
-We currently also still need to download some external ansible roles manually
-using `ansible-galaxy`.
-
-This is exposed as a `Makefile` target via `make download-ansible-roles-force`.
+If you've already cloned this repo before having enabled this, or don't want to
+enable this, run `git submodule update --init --recursive` once (and every time
+in the future you update the repo).
