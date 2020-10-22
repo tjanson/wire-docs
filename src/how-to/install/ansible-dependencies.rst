@@ -1,58 +1,23 @@
 Dependencies on operator's machine
---------------------------------------------------------------------
+----------------------------------
 
-.. TODO: simplify this setup, make it work with python 3
+We provide a container containing a compatible software stack (binaries)
+required to run the ansible playbooks, helm charts etc.
 
-You need python2, some python dependencies, a specific version of ansible, and gnu make. Then, you need to download specific ansible roles using ansible-galaxy, and binaries `kubectl` and `helm`. You have two options to achieve this:
+If you don't intend to develop *on the tooling itself*, you should use this.
 
-(Option 1) How to install the necessary components locally when using Debian or Ubuntu as your operating system
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, we're going to install Poetry. We'll be using it to run ansible playbooks, and manage their python dependencies. See also the `poetry documentation <https://poetry.eustace.io/>`__.
+Use the provided Docker container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This assumes you're using python 2.7 (if you only have python3 available, you may need to find some workarounds):
+On your machine, you need to have `docker` installed (or any other Container
+runtime really, even though instructions may differ).
 
-::
-
-   sudo apt install -y python2.7 python-pip
-   curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py > get-poetry.py
-   python2.7 get-poetry.py --yes
-   source $HOME/.poetry/env
-   ln -s /usr/bin/python2.7 $HOME/.poetry/bin/python
-
-Install the python dependencies to run ansible:
+See `how to install docker <https://docker.com>`__. Then:
 
 ::
 
-   git clone https://github.com/wireapp/wire-server-deploy.git
-   cd wire-server-deploy/ansible
-   ## (optional) if you need ca certificates other than the default ones:
-   # export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-   poetry install
-
-.. note::
-
-    The 'make download-cli-binaries' part of 'make download' requires
-    either that you have run this all as root, or that the user you are
-    running these scripts can 'sudo' without being prompted for a password.
-    To preemptively work around this, feel free to run 'sudo ls', get
-    prompted for a password, THEN run 'make download'.
-
-Download the ansible roles necessary to install databases and kubernetes:
-
-::
-
-   make download
-
-
-(Option 2) How to use docker on the local host with a docker image that contains all the dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-On your machine you need to have the `docker` binary available. See `how to install docker <https://docker.com>`__. Then:
-
-::
-
-   docker pull quay.io/wire/networkless-admin
+   docker pull quay.io/wire/wire-server-deploy-deps:latest
 
    # cd to a fresh, empty directory and create some sub directories
    cd ...  # you pick a good location!
@@ -65,7 +30,7 @@ On your machine you need to have the `docker` binary available. See `how to inst
    # make sure the server accepts your ssh key for user root
    ssh-copy-id -i ../dot_ssh/id_ed25519.pub root@<server>
 
-   docker run -it --network=host -v $(pwd):/mnt -v $(pwd)/../dot_ssh:/root/.ssh -v $(pwd)/../dot_kube:/root/.kube quay.io/wire/networkless-admin
+   docker run -it --network=host -v $(pwd):/mnt -v $(pwd)/../dot_ssh:/root/.ssh -v $(pwd)/../dot_kube:/root/.kube quay.io/wire/wire-server-deploy-deps:latest
    # inside the container, copy everything to the mounted host file system:
    cp -a /src/* /mnt
    # and make sure the git repos are up to date:
@@ -73,14 +38,12 @@ On your machine you need to have the `docker` binary available. See `how to inst
    cd /mnt/wire-server-deploy && git pull
    cd /mnt/wire-server-deploy-networkless && git pull
 
-(The name of the docker image contains ``networkless`` because it was originally constructed for high-security installations without connection to the public internet.  Since then it has grown to be our recommended general-purpose installation platform.)
-
 Now exit the docker container.  On subsequent times:
 
 ::
 
    cd admin_work_dir
-   docker run -it --network=host -v $(pwd):/mnt -v $(pwd)/../dot_ssh:/root/.ssh -v $(pwd)/../dot_kube:/root/.kube quay.io/wire/networkless-admin
+   docker run -it --network=host -v $(pwd):/mnt -v $(pwd)/../dot_ssh:/root/.ssh -v $(pwd)/../dot_kube:/root/.kube quay.io/wire/wire-server-deploy-deps:latest
    cd wire-server-deploy/ansible
    # do work.
 
@@ -92,4 +55,35 @@ To connect to a running container for a second shell:
 
 ::
 
-   docker exec -it `docker ps -q --filter="ancestor=quay.io/wire/networkless-admin"` /bin/bash
+   docker exec -it `docker ps -q --filter="ancestor=quay.io/wire/wire-server-deploy-deps:latest"` /bin/bash
+
+
+Use Nix and Direnv to provide dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We use a custom version of `ansible` (with some additional python
+dependencies), a specific version of `terraform`, `helm`, `kubectl`, `gnumake`
+and some more tooling.
+
+These are all built via `Nix <https://nixos.org>_`, and added to `$PATH` by
+`Direnv <https://direnv.net/>_`, so you would need these two things installed
+and setup to make use of it - but if you just want to use the tools, see for
+the instructions above.
+
+
+Download external Ansible Roles
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We use git submodules to manage some external ansible roles.
+
+We recommend setting `git config --global submodule.recurse true` and `git
+config --global fetch.parallel 10` for convenience.
+
+If you've already cloned this repo before having enabled this, run `git
+submodule update --init --recursive` once (or if you don't want to enable this,
+manually on every update).
+
+We currently also still need to download some external ansible roles manually
+using `ansible-galaxy`.
+
+This is exposed as a `Makefile` target via `make download-ansible-roles-force`.

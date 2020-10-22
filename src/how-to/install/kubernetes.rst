@@ -27,7 +27,7 @@ How to install kubernetes
 
 From ``wire-server-deploy/ansible``::
 
-   poetry run ansible-playbook -i hosts.ini kubernetes.yml -vv
+   ansible-playbook -i hosts.ini kubernetes.yml -vv
 
 When the playbook finishes correctly (which can take up to 20 minutes), you should have a folder ``artifacts`` containing a file ``admin.conf``. Copy this file::
 

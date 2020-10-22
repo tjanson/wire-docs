@@ -64,15 +64,13 @@ In case ``kubectl version`` shows both Client and Server versions, but ``helm ve
 
 Upgrading from Helm2 to Helm3
 -----------------------------
-Because of it's better support of offline environments, we prefer to use Helm3. This step is optional, but recommended for offline deployments.
+Because of its better support of offline environments, we strongly encourage
+you to use Helm 3.
 
-Download and install the newest version of Helm 3 from get.helm.sh.
+It is already provided in the `quay.io/wire/wire-server-deploy-deps` image.
 
-.. code:: shell
-
-   curl https://get.helm.sh/helm-v3.1.0-linux-amd64.tar.gz -o helm-v3.1.0-linux-amd64.tar.gz
-   tar -xzf helm-v3.1.0-linux-amd64.tar.gz --strip=1 --wildcards */helm
-   sudo cp helm /usr/local/bin/
+If you really need to use an older version of helm, please manually download a
+static binary from their website and add it to your `$PATH`.
 
 How to download charts for Helm 3 in an offline environment
 -----------------------------------------------------------
@@ -157,11 +155,11 @@ If you are using minio instead of AWS S3, you should also run:
 .. code:: shell
 
    helm upgrade --install minio-external wire/minio-external -f values/minio-external/values.yaml --wait
-   
+
 How to install fake AWS services for SNS / SQS / DynamoDB
 ---------------------------------------------------------
 AWS SNS is required to send notifications to clients. If you use the fake-aws version, clients will use the websocket method to receive notifications, which keeps connections to the servers open, draining battery.
-AWS SES and SQS are used for mail delivery, and reception, respectively. 
+AWS SES and SQS are used for mail delivery, and reception, respectively.
 
 
 Open a terminal and run:
