@@ -10,7 +10,7 @@ If you don't intend to develop *on the tooling itself*, you should use this.
 Use the provided Docker container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On your machine, you need to have `docker` installed (or any other Container
+On your machine, you need to have `docker` installed (or any other compatible
 runtime really, even though instructions may differ).
 
 See `how to install docker <https://docker.com>`__. Then:
