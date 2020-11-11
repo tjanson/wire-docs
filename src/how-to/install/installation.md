@@ -99,7 +99,7 @@ The following artifacts are provided:
    environment.
 
 Provide a `ansible/inventory/offline/hosts.ini` configured to your environment.
-Copy over `hosts.ini.example` from that same folder.
+Copy over `hosts.ini.example`  to `hosts.ini`, and edit it, following the instructions in that file.
 
 Also, take a look at `ansible/inventory/offline/group_vars/all//offline.yml` to
 see if it matches your expectations.
