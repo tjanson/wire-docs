@@ -11,7 +11,7 @@ Use the provided Docker container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On your machine, you need to have `docker` installed (or any other compatible
-runtime really, even though instructions may differ).
+container runtime. Instructions may need to be modified accordingly).
 
 See `how to install docker <https://docker.com>`__. Then:
 
