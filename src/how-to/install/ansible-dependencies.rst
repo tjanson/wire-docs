@@ -28,7 +28,7 @@ See `how to install docker <https://docker.com>`__. Then:
    ssh-keygen -t ed25519 -a 100 -f ../dot_ssh/id_ed25519
    ssh-add ../dot_ssh/id_ed25519
    # Copy your SSH key to the hosts you are going to deploy wire onto
-   ssh-copy-id -i ../dot_ssh/id_ed25519.pub root@<server>
+   ssh-copy-id -i ../dot_ssh/id_ed25519.pub <user>@<server>
 
    docker run -it --network=host -v $(pwd):/mnt -v $(pwd)/../dot_ssh:/root/.ssh -v $(pwd)/../dot_kube:/root/.kube quay.io/wire/wire-server-deploy-deps:latest
    # inside the container, copy everything to the mounted host file system:
