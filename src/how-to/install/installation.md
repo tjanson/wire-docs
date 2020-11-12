@@ -29,7 +29,7 @@ ssh-keygen -t ed25519 -a 100 -f ./dot_ssh/id_ed25519
 ssh-add ./dot_ssh/id_ed25519
 ````
 
-Ensure the nodes your deploying to, as well as the bastion host accept this ssh key for user `root`:
+Ensure the nodes your deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
 
 ```
 # make sure the server accepts your ssh key for user root
