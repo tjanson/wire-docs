@@ -34,7 +34,7 @@ Ensure the nodes your deploying to, as well as any bastion host between you and 
 ```
 # make sure the server accepts your ssh key for user root
 # TODO: replace with ansible oneliner making use of the inventory
-ssh-copy-id -i ./dot_ssh/id_ed25519.pub root@<server>
+ssh-copy-id -i ./dot_ssh/id_ed25519.pub <username>@<server>
 ```
 
 Obtain the latest artifacts from wire-server-deploy. Once
