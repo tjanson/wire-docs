@@ -15,28 +15,6 @@ Create a fresh workspace to download the artifacts:
 cd ...  # you pick a good location!
 ```
 
-Copy over ssh keys, or generate a key pair exclusively for this installation:
-
-```
-mkdir -p ./dot_ssh
-cp ~/.ssh/id_rsa ./dot_ssh/
-```
-
-vs.
-
-```
-ssh-keygen -t ed25519 -a 100 -f ./dot_ssh/id_ed25519
-ssh-add ./dot_ssh/id_ed25519
-````
-
-Ensure the nodes your deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
-
-```
-# make sure the server accepts your ssh key for user root
-# TODO: replace with ansible oneliner making use of the inventory
-ssh-copy-id -i ./dot_ssh/id_ed25519.pub <username>@<server>
-```
-
 Obtain the latest artifacts from wire-server-deploy. Once
 https://github.com/wireapp/wire-server-deploy/pull/363 is finished, these will
 be in the "Releases" tab. Until then, go to the PRs "Checks" tab, and look for
@@ -45,24 +23,51 @@ the URL of the "assets" tarball linked from CI.
 Extract the above listed artifacts into your workspace:
 
 ```
-wget https://path.of.the/artifact.tgz
-tar xvzf path-to-file.tgz
+wget https://s3-eu-west-1.amazonaws.com/public.wire.com/artifacts/wire-server-deploy-static-77a1abdce68f77d6dd2ac53192825c6ac46c0aa0.tgz
+tar xvzf wire-server-deploy-static-77a1abdce68f77d6dd2ac53192825c6ac46c0aa0.tgz
 ```
+
+You should now have a directory named `assets` containing the offline deploy artifacts.
+
+
+Copy over ssh keys, or generate a key pair exclusively for this installation:
+
+```
+mkdir -p ./assets/dot_ssh
+cp ~/.ssh/id_rsa ./assets/dot_ssh/
+```
+
+vs.
+
+```
+ssh-keygen -t ed25519 -a 100 -f ./assets/dot_ssh/id_ed25519
+ssh-add ./assets/dot_ssh/id_ed25519
+````
+
+Ensure the nodes your deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
+
+```
+# make sure the server accepts your ssh key for user root
+# TODO: replace with ansible oneliner making use of the inventory
+ssh-copy-id -i ./assets/dot_ssh/id_ed25519.pub <username>@<server>
+```
+
+Now `cd ./assets`. All the following operations should happen from the `assets` directory
+
 
 There's also a docker image containing the tooling inside this repo.
 
 If you don't intend to develop *on wire-server-deploy itself*, you should load
 this and register an alias:
-
 ```
-docker load -i assets/wire-server-deploy-*.tar
-alias d="docker run -it --network=host -v $PWD:/wire-server-deploy quay.io/wire/wire-server-deploy:$wire_server_deploy_version"
+docker load -i ./containers-other/6wxaqfjbkpr02yrx6vjkc13abjcdqv8q-docker-image-wire-server-deploy.tar.gz
+alias d="docker run -it --network=host -v $PWD:/wire-server-deploy quay.io/wire/wire-server-deploy:6wxaqfjbkpr02yrx6vjkc13abjcdqv8q"
 alias dapi="d ansible-playbook -i ansible/inventory/offline/hosts.ini"
 ```
 
 The following artifacts are provided:
 
- - `wire-server-deploy-*.tar`
+ - `containers-other/wire-server-deploy-*.tar`
    A container image containing ansible, helm, and other tools and their
    dependencies in versions verified to be compatible with the current wire
    stack. Published to `quay.io/wire/wire-server-deploy` as well, but shipped
@@ -100,6 +105,7 @@ The following artifacts are provided:
 
 Provide a `ansible/inventory/offline/hosts.ini` configured to your environment.
 Copy over `hosts.ini.example`  to `hosts.ini`, and edit it, following the instructions in that file.
+
 
 Also, take a look at `ansible/inventory/offline/group_vars/all/offline.yml` to
 see if it matches your expectations.
