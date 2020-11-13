@@ -104,6 +104,7 @@ The following artifacts are provided:
 
 Provide a `ansible/inventory/offline/hosts.ini` configured to your environment.
 Copy over `hosts.ini.example`  to `hosts.ini`, and edit it, following the instructions in that file.
+Don't forget to set a value for `restund_zrest_secret`, in case that is part of your inventory.
 
 
 Also, take a look at `ansible/inventory/offline/group_vars/all/offline.yml` to
