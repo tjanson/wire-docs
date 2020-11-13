@@ -50,7 +50,7 @@ Ensure the nodes your deploying to, as well as any bastion host between you and 
 ssh-copy-id -i ./assets/dot_ssh/id_ed25519.pub <username>@<server>
 ```
 
-Now `cd ./assets`. All the following operations should happen from the `assets` directory
+Now `cd ./assets`. All the following operations should happen from the `assets` directory.
 
 
 There's also a docker image containing the tooling inside this repo.
@@ -58,9 +58,9 @@ There's also a docker image containing the tooling inside this repo.
 If you don't intend to develop *on wire-server-deploy itself*, you should load
 this and register an alias:
 ```
-docker load -i ./containers-other/6wxaqfjbkpr02yrx6vjkc13abjcdqv8q-docker-image-wire-server-deploy.tar.gz
-alias d="docker run -it --network=host -v $PWD:/wire-server-deploy quay.io/wire/wire-server-deploy:6wxaqfjbkpr02yrx6vjkc13abjcdqv8q"
-alias dapi="d ansible-playbook -i ansible/inventory/offline/hosts.ini"
+docker load -i ./containers-other/pxllp20fzzbafc179v4yjqijx9zw0254-docker-image-wire-server-deploy.tar.gz
+alias d="docker run -it --network=host -v $PWD:/wire-server-deploy quay.io/wire/wire-server-deploy:pxllp20fzzbafc179v4yjqijx9zw0254"
+alias dapi="d ansible-playbook -i ansible/inventory/offline/hosts.ini --private-key ./dot_ssh/id_ed25519"
 ```
 
 The following artifacts are provided:
@@ -120,10 +120,15 @@ dapi ansible/setup-offline-sources.yml
 Run kubespray until docker is installed and runs:
 
 ```
-dapi ansible/roles-external/kubespray/cluster.yml --tags bastion,bootstrap-os,preinstall,container-engine
+dapi ansible/kubernetes.yml --tags bastion,bootstrap-os,preinstall,container-engine
 ```
 
-With docker being installed, seed all container images:
+Now; run the restund playbook until docker is installed:
+```
+dapi ansible/restund.yml --tags docker
+```
+
+With docker being installed on all nodes that need it, seed all container images:
 
 ```
 dapi ansible/seed-offline-docker.yml
@@ -134,6 +139,35 @@ Run the rest of kubespray:
 ```
 dapi ansible/kubernetes.yml --skip-tags bootstrap-os,preinstall,container-engine
 ```
+
+Copy over the kubeconfig from one master node:
+```
+d ansible -i ./ansible/inventory/offline/hosts.ini "kube-master[0]" -m fetch -a  "src=/root/.kube/config dest=ansible/kubeconfig flat=yes"
+```
+
+Ensure the cluster comes up healthy. Copy TODO kubecfg from a master node, and put it to TODO. The container also contains kubectl, so check the node status:
+
+```
+d kubectl get nodes -owide
+```
+They should all report ready.
+
+Now, deploy all other services which don't run in kubernetes:
+
+```
+dapi ansible/restund.yaml
+dapi ansible/cassandra.yaml
+dapi ansible/elasticsearch.yaml
+dapi ansible/minio.yaml
+```
+TODO: add commands to verify things are good
+
+Afterwards, run the following playbook to create helm values
+```
+dapi ansible/helm_external.yaml
+```
+
+Write other values by copying over TODO
 
 TODO:
 
