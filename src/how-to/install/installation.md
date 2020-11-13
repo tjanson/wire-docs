@@ -159,7 +159,7 @@ Now, deploy all other services which don't run in kubernetes:
 ```
 dapi ansible/restund.yml
 dapi ansible/cassandra.yml
-dapi ansible/elasticsearch.yaml
+dapi ansible/elasticsearch.yml
 dapi ansible/minio.yaml
 ```
 TODO: add commands to verify things are good
