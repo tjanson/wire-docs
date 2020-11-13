@@ -174,9 +174,24 @@ dapi ansible/helm_external.yml
 
 Write other values by copying over TODO
 
+Use Helm to apply the varios charts in order to install the Wire platform
+
+```
+d helm install cassandra-external ./charts/cassandra-external --values ./values/cassandra-external/values.yaml
+d helm install elasticsearch-external ./charts/elasticsearch-external --values ./values/elasticsearch-external/values.yaml
+d helm install minio-external ./charts/minio-external --values ./values/minio-external/values.yaml
+d helm install fake-aws ./charts/fake-aws --values ./values/fake-aws/values.yaml
+d helm install demo-smtp ./charts/demo-smtp --values ./values/demo-smtp/values.yaml
+d helm install redis-ephemeral ./charts/nginx-ingress-controller
+d helm install reaper ./charts/reaper
+
+d helm install wire-server ./charts/wire-server --timeout=15m0s --values ./values/wire-server/values.yaml --values ./values/wire-server/secrets.yaml
+
+d helm install nginx-ingress-controller ./charts/nginx-ingress-controller
+d helm install nginx-ingress-services ./charts/nginx-ingress-services --values ./values/nginx-ingress-services/values.yaml  --values ./values/nginx-ingress-services/secrets.yaml
+```
+
 TODO:
 
  - run other playbooks for other pets.
- - run `helm_external.yml` to render helm values from the ansible inventory
- - run helm to install our charts
  - add zauth tool to our docker container
