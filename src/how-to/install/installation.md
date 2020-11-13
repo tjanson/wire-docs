@@ -39,8 +39,9 @@ cp ~/.ssh/id_rsa ./assets/dot_ssh/
 
 vs.
 
+```
 ssh-add ./assets/dot_ssh/id_ed25519
-````
+```
 
 Ensure the nodes your deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
 
