@@ -110,7 +110,7 @@ Also, take a look at `ansible/inventory/offline/group_vars/all/offline.yml` to
 see if it matches your expectations.
 
 
-Copy over binaries and debs, serves assets from the asset host, and configures
+Copy over binaries and debs, serves assets from the asset host, and configure
 other hosts to fetch debs from it:
 
 
