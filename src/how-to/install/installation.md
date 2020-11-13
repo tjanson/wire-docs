@@ -157,7 +157,7 @@ They should all report ready.
 Now, deploy all other services which don't run in kubernetes:
 
 ```
-dapi ansible/restund.yaml
+dapi ansible/restund.yml
 dapi ansible/cassandra.yaml
 dapi ansible/elasticsearch.yaml
 dapi ansible/minio.yaml
