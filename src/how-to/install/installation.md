@@ -147,7 +147,7 @@ Copy over the kubeconfig from one master node:
 d ansible -i ./ansible/inventory/offline/hosts.ini "kube-master[0]" -m fetch -a  "src=/root/.kube/config dest=ansible/kubeconfig flat=yes"
 ```
 
-Ensure the cluster comes up healthy. Copy TODO kubecfg from a master node, and put it to TODO. The container also contains kubectl, so check the node status:
+Ensure the cluster comes up healthy. The container also contains kubectl, so check the node status:
 
 ```
 d kubectl get nodes -owide
