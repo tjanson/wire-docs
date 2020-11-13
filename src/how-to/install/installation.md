@@ -169,7 +169,7 @@ TODO: add commands to verify things are good
 
 Afterwards, run the following playbook to create helm values
 ```
-dapi ansible/helm_external.yaml
+dapi ansible/helm_external.yml
 ```
 
 Write other values by copying over TODO
