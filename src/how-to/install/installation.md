@@ -39,7 +39,6 @@ cp ~/.ssh/id_rsa ./assets/dot_ssh/
 
 vs.
 
-```
 ssh-keygen -t ed25519 -a 100 -f ./assets/dot_ssh/id_ed25519
 ssh-add ./assets/dot_ssh/id_ed25519
 ````
