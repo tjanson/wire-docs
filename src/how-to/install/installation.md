@@ -176,6 +176,8 @@ Write other values by copying over TODO
 
 Use Helm to apply the varios charts in order to install the Wire platform
 
+TODO: update https://docs.wire.com/how-to/install/helm-prod.html to not add the iptables hack
+
 ```
 d helm install cassandra-external ./charts/cassandra-external --values ./values/cassandra-external/values.yaml
 d helm install elasticsearch-external ./charts/elasticsearch-external --values ./values/elasticsearch-external/values.yaml
@@ -190,6 +192,84 @@ d helm install wire-server ./charts/wire-server --timeout=15m0s --values ./value
 d helm install nginx-ingress-controller ./charts/nginx-ingress-controller
 d helm install nginx-ingress-services ./charts/nginx-ingress-services --values ./values/nginx-ingress-services/values.yaml  --values ./values/nginx-ingress-services/secrets.yaml
 ```
+
+## Deploying legalhold
+Legalhold is an optional component that can be installed on-prem for
+compliance. The following steps explain how to enable it.
+
+Legalhold is enabled per team in the team settings. While enabling it, you need
+to provide the public key of the legalhold service, and a service token.
+
+The Legalhold ingress endpoint needs to be reachable from the backend service.
+
+Legalhold consists of a service and a PostgreSQL database. We provide a helm
+chart that installs it in a cluster (which does not need to be the same as the
+one running wire):
+
+### Ensure you have a storage provisioner installed
+Our helm charts provide a PostgreSQL database. For this to work, a storage
+provisioner needs to be installed in your cluster, and a default storage class
+needs to be configured.
+
+Please pick a storage provisioner matching to your environment. See
+https://kubernetes.io/docs/concepts/storage/ for details. If you are in a cloud
+environment there is a high chance a storage provisioner is already
+preconfigured. You can check this with `kubectl get storageclass`.
+
+We also provide a off-the-shelf storage provider that uses the local disks of
+the kubernetes nodes.  Keep in mind that this has several downsides. There is
+no redundancy to protect against disk failures, no automated backups, and your
+workloads will be bound to the node that keeps the data volume and can not be
+rescheduled.  Disaster recovery requires manual intervention.
+
+If you have no more suitable storage provisioner configured, and feel
+comfortable with the local path provisioner, install it with the following
+command:
+```
+d helm install local-path-provisioner ./charts/local-path-provisioner --set storageClass.defaultClass=true
+```
+
+### Install the legalhold helm chart
+In `values/wire-server/values.yaml` make sure that `tags.legalhold` is set to `true`.
+Also make sure that `FEATURE_ENABLE_LEGAL_HOLD: "true"` is set.  Then set
+```
+legalhold:
+  host: "legalhold.example.com"
+  wireApiHost: "https://nginz-https.example.com"
+```
+to the domain name of your legalhold service and to the endpoint of the `nginz`
+component you configured in the previous steps.
+
+Note that for legalhold to function, it is important that both `host` and
+`wireApiHost` are reachable from _within_ the cluster. Make sure you have
+configured your loadbalancer to support this.
+
+
+Now, get a certificate for the domain you set in `legalhold.host` and add this
+to `values/wire-server/secrets.yaml`.  These are the `legalhold.tlsKey` and
+`legalhold.tlsCert` options.
+
+Finally in `values/wire-server/secrets.yaml`, `legalhold.serviceToken`  needs to
+be set to a random alpha-numerical string.
+
+
+Now the legalhold helm chart can be installed with the following command:
+
+```
+d helm upgrade wire-server ./charts/wire-server -f ./values/wire-server/values.yaml -f ./values/wire-server/secrets.yaml
+```
+
+
+### Configuring legalhold in Team-settings
+
+Extract the public key out of the legalhold certificate:
+```
+openssl x509 -pubkey -noout -in cert.pem  > pubkey.pem
+```
+
+Go to your team-setings page at `https://teams.<your-domain>`. In the Settings page you can configure
+the legalhold service. Paste in the public key and the service token (that you configured under `legalhold.serviceToken`) to configure the legalhold service.
+
 
 TODO:
 
