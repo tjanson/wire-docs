@@ -43,7 +43,7 @@ vs.
 ssh-add ./assets/dot_ssh/id_ed25519
 ```
 
-Ensure the nodes your deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
+Ensure the nodes you are deploying to, as well as any bastion host between you and them accept this ssh key for the user you are performing the install as:
 
 ```
 # make sure the server accepts your ssh key for user root
@@ -89,7 +89,7 @@ The following artifacts are provided:
    These are the container images our charts (and charts we depend on) refer to.
    Also come as tarballs, and are seeded like the system containers.
  - *containers-other*
-   These are other container images, not deployed inside k8s. Currently only
+   These are other container images, not deployed inside k8s. Currently, only
    contains restund.
  - `debs`
    This acts as a self-contained dump of all packages required to install
@@ -174,7 +174,7 @@ dapi ansible/helm_external.yml
 
 Write other values by copying over TODO
 
-Use Helm to apply the varios charts in order to install the Wire platform
+Use Helm to apply the various charts in order to install the Wire platform
 
 TODO: update https://docs.wire.com/how-to/install/helm-prod.html to not add the iptables hack
 
@@ -231,7 +231,7 @@ d helm install local-path-provisioner ./charts/local-path-provisioner --set stor
 
 ### Install the legalhold helm chart
 In `values/wire-server/values.yaml` make sure that `tags.legalhold` is set to `true`.
-Also make sure that `FEATURE_ENABLE_LEGAL_HOLD: "true"` is set.  Then set
+Also, make sure that `FEATURE_ENABLE_LEGAL_HOLD: "true"` is set.  Then set
 ```
 legalhold:
   host: "legalhold.example.com"
@@ -249,7 +249,7 @@ Now, get a certificate for the domain you set in `legalhold.host` and add this
 to `values/wire-server/secrets.yaml`.  These are the `legalhold.tlsKey` and
 `legalhold.tlsCert` options.
 
-Finally in `values/wire-server/secrets.yaml`, `legalhold.serviceToken`  needs to
+Finally, in `values/wire-server/secrets.yaml`, `legalhold.serviceToken`  needs to
 be set to a random alpha-numerical string.
 
 
@@ -267,7 +267,7 @@ Extract the public key out of the legalhold certificate:
 openssl x509 -pubkey -noout -in cert.pem  > pubkey.pem
 ```
 
-Go to your team-setings page at `https://teams.<your-domain>`. In the Settings page you can configure
+Go to your team-settings page at `https://teams.<your-domain>`. In the Settings page you can configure
 the legalhold service. Paste in the public key and the service token (that you configured under `legalhold.serviceToken`) to configure the legalhold service.
 
 
