@@ -193,6 +193,22 @@ d helm install nginx-ingress-controller ./charts/nginx-ingress-controller
 d helm install nginx-ingress-services ./charts/nginx-ingress-services --values ./values/nginx-ingress-services/values.yaml  --values ./values/nginx-ingress-services/secrets.yaml
 ```
 
+### Ephemeral Helm deployment
+
+Before applying the HElm charts, adjust your own copy of `wire-server/values.yaml` so that every `replicaCount` is set to `1`. Futhermore, change every occurrence of `[cassandra,elasticsearch]-external` to `[cassandra,elasticsearch]-ehemeral` and `minio-external` to `fake-aws-s3`.
+
+```
+d helm install databases-ephemeral ./charts/databases-ephemeral
+d helm install fake-aws ./charts/fake-aws
+d helm install reaper ./charts/reaper
+d helm install demo-smtp ./charts/demo-smtp
+
+d helm install wire-server ./charts/wire-server --timeout=15m0s --values ./values/wire-server/values.yaml --values ./values/wire-server/secrets.yaml
+
+d helm install nginx-ingress-controller ./charts/nginx-ingress-controller
+d helm install nginx-ingress-services ./charts/nginx-ingress-services --values ./values/nginx-ingress-services/values.yaml  --values ./values/nginx-ingress-services/secrets.yaml
+```
+
 ## Deploying legalhold
 Legalhold is an optional component that can be installed on-prem for
 compliance. The following steps explain how to enable it.
