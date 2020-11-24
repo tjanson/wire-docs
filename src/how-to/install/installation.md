@@ -26,6 +26,7 @@ Extract the above listed artifacts into your workspace:
 wget https://s3-eu-west-1.amazonaws.com/public.wire.com/artifacts/wire-server-deploy-static-<HASH>.tgz
 tar xvzf wire-server-deploy-static-<HASH>.tgz
 ```
+Where the HASH above is the hash of your deployment artifact, given to you by Wire, or acquired by looking at the above build job.
 
 You should now have a directory named `assets` containing the offline deploy artifacts.
 
