@@ -23,7 +23,7 @@ the URL of the "assets" tarball linked from CI.
 Extract the above listed artifacts into your workspace:
 
 ```
-wget https://s3-eu-west-1.amazonaws.com/public.wire.com/artifacts/wire-server-deploy-static-4a8bd3e21a078b378dcc577861947c04a180f976.tgz
+wget https://s3-eu-west-1.amazonaws.com/public.wire.com/artifacts/wire-server-deploy-static-<HASH>.tgz
 tar xvzf wire-server-deploy-static-77a1abdce68f77d6dd2ac53192825c6ac46c0aa0.tgz
 ```
 
