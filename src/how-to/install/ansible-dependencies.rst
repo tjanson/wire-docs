@@ -61,7 +61,7 @@ To connect to a running container for a second shell:
 Use Nix and Direnv to provide dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We use a custom version of `ansible` (with some additional python
+We use a specific version of `ansible` (with some additional python
 dependencies), a specific version of `terraform`, `helm`, `kubectl`, `gnumake`
 and some more tooling.
 
