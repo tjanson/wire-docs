@@ -307,6 +307,11 @@ E.g.:
 kubenode3 node_labels="wire.com/role=sftd" node_annotations="{'wire.com/external-ip': 'XXXX'}"
 ```
 
+If these weren't already set; you should rerun :
+```
+dapi ansible/kubernetes.yml --skip-tags bootstrap-os,preinstall,container-engine
+```
+
 Now, deploy the chart. Note the `nodeSelector` matching up with your ansible inventory!!
 
 ```
