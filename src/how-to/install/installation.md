@@ -9,6 +9,10 @@ installed (or any other compatible container runtime really, even though
 instructions may need to be modified). See [how to install
 docker](https://docker.com) for instructions.
 
+On ubuntu 18.04, connected to the internet:
+
+apt install docker.io
+
 Create a fresh workspace to download the artifacts:
 
 ```
@@ -322,5 +326,4 @@ d helm upgrade sftd ./charts/sftd \
   --set-file tls.crt=/path/to/tls.crt \
   --set-file tls.key=/path/to/tls.key
 ```
-
 
