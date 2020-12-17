@@ -13,6 +13,8 @@ On ubuntu 18.04, connected to the internet:
 
 apt install docker.io
 
+Ensure the user you are using for the install has permission to run docker, or add 'sudo' to the docker commands below.
+
 Create a fresh workspace to download the artifacts:
 
 ```
@@ -326,4 +328,3 @@ d helm upgrade sftd ./charts/sftd \
   --set-file tls.crt=/path/to/tls.crt \
   --set-file tls.key=/path/to/tls.key
 ```
-
