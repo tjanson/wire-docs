@@ -66,7 +66,7 @@ There's also a docker image containing the tooling inside this repo.
 If you don't intend to develop *on wire-server-deploy itself*, you should load
 this and register an alias:
 ```
-docker load -i ./containers-other/pxllp20fzzbafc179v4yjqijx9zw0254-docker-image-wire-server-deploy.tar.gz
+docker load -i ./containers-other/*-docker-image-wire-server-deploy.tar.gz
 alias d="docker run -it --network=host -v $PWD:/wire-server-deploy quay.io/wire/wire-server-deploy:pxllp20fzzbafc179v4yjqijx9zw0254"
 alias dapi="d ansible-playbook -i ansible/inventory/offline/hosts.ini --private-key ./dot_ssh/id_ed25519"
 ```
