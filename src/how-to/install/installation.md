@@ -292,3 +292,30 @@ TODO:
 
  - run other playbooks for other pets.
  - add zauth tool to our docker container
+
+### Installing sftd
+
+For full docs with details and explanations please see https://github.com/wireapp/wire-server-deploy/blob/d7a089c1563089d9842aa0e6be4a99f6340985f2/charts/sftd/README.md
+
+First, make sure you have a certificate for `sftd.<yourdomain>`. This could be the same wildcard or SAN certificate
+you used at previous steps.
+
+Next, make sure that in your `hosts.ini` you have annotated all the nodes that are able to run sftd workloads correctly.
+It is important for sftd to be aware of its own external IP.
+E.g.:
+```
+kubenode3 node_labels="wire.com/role=sftd" node_annotations="{'wire.com/external-ip': 'XXXX'}"
+```
+
+Now, deploy the chart. Note the `nodeSelector` matching up with your ansible inventory!!
+
+```
+d helm upgrade sftd ./charts/sftd \
+  --set 'nodeSelector.wire\.com/role=sftd' \
+  --set host=sftd.example.com \
+  --set allowOrigin=https://webapp.example.com \
+  --set-file tls.crt=/path/to/tls.crt \
+  --set-file tls.key=/path/to/tls.key
+```
+
+
