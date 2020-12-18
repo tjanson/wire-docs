@@ -321,7 +321,7 @@ dapi ansible/kubernetes.yml --skip-tags bootstrap-os,preinstall,container-engine
 Now, deploy the chart. Note the `nodeSelector` matching up with your ansible inventory!!
 
 ```
-d helm upgrade sftd ./charts/sftd \
+d helm upgrade --install sftd ./charts/sftd \
   --set 'nodeSelector.wire\.com/role=sftd' \
   --set host=sftd.example.com \
   --set allowOrigin=https://webapp.example.com \
